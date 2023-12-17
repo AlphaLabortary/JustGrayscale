@@ -1,0 +1,98 @@
+name: Release Just Grayscale
+on:
+    push:
+        branches: ["release", "snapshot"]
+    workflow_dispatch:
+
+jobs:
+    build:
+        name: Build Signed APK
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                token: ${{ secrets.GH_PAT }}
+                submodules: true
+
+            - name: Validate Gradle Wrapper
+              uses: gradle/wrapper-validation-action@v1
+
+            - name: Setup GraalVM
+              uses: graalvm/setup-graalvm@v1
+              with:
+                github-token: ${{ secrets.GH_PAT }}
+                java-version: 19
+                version: latest
+                cache: 'gradle'
+
+            - name: Build APK
+              run: ./gradlew :app:assembleRelease
+              env:
+                KSF_NAME: ${{ secrets.F }}
+                KSF_PASS: ${{ secrets.P }}
+                KEY_NAME: ${{ secrets.A }}
+                KEY_PASS: ${{ secrets.K }}
+
+            - name: Get Release Version
+              id: release
+              run: |
+                version=$(cat app/build/outputs/apk/release/output-metadata.json | jq -r '.elements[0].versionName')
+                echo "version=$version" >> $GITHUB_OUTPUT
+                echo "a=$(version | cut -d '.' -f 1)" >> $GITHUB_OUTPUT
+                echo "b=$(version | cut -d '.' -f 2)" >> $GITHUB_OUTPUT
+                echo "c=$(version | cut -d '.' -f 3)" >> $GITHUB_OUTPUT
+                echo "d=$(version | cut -d '.' -f 4)" >> $GITHUB_OUTPUT
+
+            - name: Upload APK (Release)
+              if: github.ref_name == 'release' || github.ref_name == 'snapshot'
+              uses: actions/upload-artifact@v4
+              with:
+                name: Release
+                path: app/build/outputs/apk/release/app-release.apk
+
+            - name: Release APK
+              if: github.ref_name == 'release'
+              uses: softprops/action-gh-release@v1
+              with:
+                name: "Version ${{ steps.release.outputs.version }}"
+                tag_name: v${{ steps.release.outputs.a }}/${{ steps.release.outputs.b }}/${{ steps.release.outputs.c }}/${{ steps.release.outputs.d }}
+                target_commitish: ${{ github.ref_name }}
+                generate_release_notes: true
+                fail_on_unmatched_files: true
+                files: app/build/outputs/apk/release/app-release.apk
+
+            - name: Release APK
+              if: github.ref_name == 'release'
+              uses: softprops/action-gh-release@v1
+              with:
+                name: "Version ${{ steps.release.outputs.version }}"
+                tag_name: latest/release
+                target_commitish: ${{ github.ref_name }}
+                generate_release_notes: true
+                fail_on_unmatched_files: true
+                files: app/build/outputs/apk/release/app-release.apk
+
+            - name: Release APK (Snapshot)
+              if: github.ref_name == 'snapshot'
+              uses: softprops/action-gh-release@v1
+              with:
+                name: "Version ${{ steps.release.outputs.version }}"
+                tag_name: v${{ steps.release.outputs.a }}/${{ steps.release.outputs.b }}/${{ steps.release.outputs.c }}/${{ steps.release.outputs.d }}
+                target_commitish: ${{ github.ref_name }}
+                generate_release_notes: true
+                prerelease: true
+                fail_on_unmatched_files: true
+                files: app/build/outputs/apk/release/app-release.apk
+
+            - name: Release APK (Snapshot)
+              if: github.ref_name == 'snapshot'
+              uses: softprops/action-gh-release@v1
+              with:
+                name: "Version ${{ steps.release.outputs.version }}"
+                tag_name: latest/snapshot
+                target_commitish: ${{ github.ref_name }}
+                generate_release_notes: true
+                prerelease: true
+                fail_on_unmatched_files: true
+                files: app/build/outputs/apk/release/app-release.apk

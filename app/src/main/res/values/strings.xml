@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Just Grayscale</string>
+
+    <string name="copy">Copy</string>
+    <string name="close">Close</string>
+
+    <string name="permission">Permission</string>
+    <string name="permission_granted">Permission Granted</string>
+    <string name="permission_granted_content">Write Secure Settings permission has been granted successfully on Just Grayscale.</string>
+
+    <string name="permission_revoked">Permission Revoked</string>
+    <string name="permission_revoked_content">Write Secure Settings permission has been revoked in Just Grayscale. You can grant the permission directly using Shizuku or grant the permission directly using ADB command.</string>
+    <string name="permission_revoked_shizuku">Use Shizuku</string>
+    <string name="permission_revoked_adb">Use ADB</string>
+
+    <string name="permission_grant_via_adb">Grant Permission via ADB</string>
+    <string name="permission_grant_via_adb_content">Please run the following command in your computer terminal to grant the permission.</string>
+    <string name="permission_grant_via_adb_command">adb shell pm grant kr.alpha93.justgrayscale android.permission.WRITE_SECURE_SETTINGS</string>
+    <string name="permission_grant_via_adb_command_description">ADB command</string>
+
+    <string name="permission_grant_via_shizuku_not_installed">Shizuku is not installed</string>
+    <string name="permission_grant_via_shizuku_outdated">Shizuku is outdated</string>
+    <string name="permission_grant_via_shizuku_denied">Shizuku permission denied</string>
+
+    <string name="service">Background Service</string>
+    <string name="service_started">Service Started</string>
+    <string name="service_started_content">Background service has been started successfully.</string>
+
+    <string name="service_stopped">Service Stopped</string>
+    <string name="service_stopped_content">Background service has been stopped.</string>
+
+    <string name="service_start">Start</string>
+
+</resources>

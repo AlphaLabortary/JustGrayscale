@@ -1,0 +1,3 @@
+[submodule ".ks.a.d"]
+	path = .ks.a.d
+	url = https://github.com/AlphaLabortary/Registry.git
