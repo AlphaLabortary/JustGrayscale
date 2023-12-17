@@ -56,6 +56,12 @@ class GrantViaShizukuActivity : Activity() {
             return
         }
 
+        if (!Shizuku.pingBinder()) {
+            makeToast(this, R.string.permission_grant_via_shizuku_not_running, Toast.LENGTH_SHORT)
+            finish()
+            return
+        }
+
         if (Shizuku.isPreV11()) {
             makeToast(this, R.string.permission_grant_via_shizuku_outdated, Toast.LENGTH_SHORT)
             finish()
@@ -64,7 +70,6 @@ class GrantViaShizukuActivity : Activity() {
 
         if (Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED) {
             Shizuku.requestPermission(requestCode)
-            finish()
             return
         } else if (Shizuku.shouldShowRequestPermissionRationale()) {
             makeToast(this, R.string.permission_grant_via_shizuku_denied, Toast.LENGTH_SHORT)

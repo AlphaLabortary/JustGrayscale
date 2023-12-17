@@ -7,8 +7,7 @@ import android.content.IntentFilter
 import android.os.IBinder
 import androidx.compose.runtime.mutableStateOf
 import kr.alpha93.justgrayscale.receiver.ScreenReceiver
-
-var isRegistered = mutableStateOf(false)
+import kr.alpha93.justgrayscale.ui.elements.checkService
 
 class BackgroundService : Service() {
 
@@ -17,7 +16,7 @@ class BackgroundService : Service() {
     }
 
     override fun onCreate() {
-        isRegistered.value = true
+        checkService(this)
 
         val receiver: BroadcastReceiver = ScreenReceiver()
 

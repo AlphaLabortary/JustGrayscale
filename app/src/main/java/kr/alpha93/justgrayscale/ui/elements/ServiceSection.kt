@@ -1,9 +1,13 @@
 package kr.alpha93.justgrayscale.ui.elements
 
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
+import android.os.PowerManager
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +23,7 @@ import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,11 +33,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kr.alpha93.justgrayscale.R
 import kr.alpha93.justgrayscale.services.BackgroundService
-import kr.alpha93.justgrayscale.services.isRegistered
 import kr.alpha93.justgrayscale.ui.theme.Theme
 import kr.alpha93.justgrayscale.ui.util.ResourcedIcon
 import kr.alpha93.justgrayscale.ui.util.ResourcedText
 import kr.alpha93.justgrayscale.ui.util.makeToast
+
+val isRegistered = mutableStateOf(false)
 
 fun startService(context: Context) {
     Intent(context, BackgroundService::class.java).run {
@@ -41,8 +47,27 @@ fun startService(context: Context) {
     makeToast(context, R.string.service_started, Toast.LENGTH_SHORT)
 }
 
+fun checkService(context: Context) {
+    isRegistered.value = (context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).getRunningServices(Int.MAX_VALUE)
+        .any { it.service.className == "kr.alpha93.justgrayscale.services.BackgroundService" }
+}
+
+fun checkBatteryOptimizations(context: Context): Boolean {
+    val state = (context.getSystemService(ComponentActivity.POWER_SERVICE) as PowerManager)
+        .isIgnoringBatteryOptimizations(context.packageName)
+    return state
+}
+
+fun requestBatteryOptimizationsAndStart(context: Context) {
+    Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).also {
+        it.data = android.net.Uri.parse("package:${context.packageName}")
+        context.startActivity(it)
+    }
+}
+
 @Composable
 fun ServiceSection() {
+    checkService(LocalContext.current)
     if (isRegistered.value) ServiceRegisteredSection() else ServiceStoppedSection()
 }
 
@@ -124,7 +149,15 @@ private fun ServiceStoppedSection() {
                     ) {
                         Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
                             Button(
-                                onClick = { startService(context); Log.i("button", "started") },
+                                onClick = {
+                                    if (!checkBatteryOptimizations(context)) {
+                                        requestBatteryOptimizationsAndStart(context)
+                                        makeToast(context, R.string.permission_grant_via_shizuku_not_running, Toast.LENGTH_SHORT)
+                                    } else {
+                                        startService(context)
+                                        Log.i("button", "started")
+                                    }
+                                },
                                 content = { ResourcedText(R.string.service_start) }
                             )
                         }

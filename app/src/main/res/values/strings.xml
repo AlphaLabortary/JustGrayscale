@@ -19,6 +19,7 @@
     <string name="permission_grant_via_adb_command_description">ADB command</string>
 
     <string name="permission_grant_via_shizuku_not_installed">Shizuku is not installed</string>
+    <string name="permission_grant_via_shizuku_not_running">Shizuku is not running</string>
     <string name="permission_grant_via_shizuku_outdated">Shizuku is outdated</string>
     <string name="permission_grant_via_shizuku_denied">Shizuku permission denied</string>
 
@@ -28,6 +29,7 @@
 
     <string name="service_stopped">Service Stopped</string>
     <string name="service_stopped_content">Background service has been stopped.</string>
+    <string name="service_stopped_battery_optimization">Battery Optimization Enabled</string>
 
     <string name="service_start">Start</string>
 
