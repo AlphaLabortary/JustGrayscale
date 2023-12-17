@@ -1,5 +1,6 @@
 package kr.alpha93.justgrayscale.ui.elements
 
+import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
@@ -58,6 +59,7 @@ fun checkBatteryOptimizations(context: Context): Boolean {
     return state
 }
 
+@SuppressLint("BatteryLife")
 fun requestBatteryOptimizationsAndStart(context: Context) {
     Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).also {
         it.data = android.net.Uri.parse("package:${context.packageName}")
