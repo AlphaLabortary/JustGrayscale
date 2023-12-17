@@ -30,7 +30,9 @@
     <string name="service_stopped">Service Stopped</string>
     <string name="service_stopped_content">Background service has been stopped.</string>
     <string name="service_stopped_battery_optimization">Battery Optimization Enabled</string>
+    <string name="service_stopped_notification_denied">Post Notification Permission Denied</string>
 
     <string name="service_start">Start</string>
+    <string name="service_running">Just Grayscale is running in the background.\nTo Turn Off the notification, press long on the notification and select Turn off notifications.</string>
 
 </resources>
