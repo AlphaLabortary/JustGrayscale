@@ -1,27 +1,49 @@
 <resources>
     <string name="app_name">Just Grayscale</string>
 
-    <string name="copy">Copy</string>
-    <string name="close">Close</string>
+    <string name="button_copy">Copy</string>
+    <string name="button_close">Close</string>
 
-    <string name="permission">Permission</string>
     <string name="permission_granted">Permission Granted</string>
-    <string name="permission_granted_content">Write Secure Settings permission has been granted successfully on Just Grayscale.</string>
-
     <string name="permission_revoked">Permission Revoked</string>
-    <string name="permission_revoked_content">Write Secure Settings permission has been revoked in Just Grayscale. You can grant the permission directly using Shizuku or grant the permission directly using ADB command.</string>
-    <string name="permission_revoked_shizuku">Use Shizuku</string>
-    <string name="permission_revoked_adb">Use ADB</string>
+    <string name="setup_not_completed">Setup Not Completed</string>
 
-    <string name="permission_grant_via_adb">Grant Permission via ADB</string>
-    <string name="permission_grant_via_adb_content">Please run the following command in your computer terminal to grant the permission.</string>
-    <string name="permission_grant_via_adb_command">adb shell pm grant kr.alpha93.justgrayscale android.permission.WRITE_SECURE_SETTINGS</string>
-    <string name="permission_grant_via_adb_command_description">ADB command</string>
+    <string name="permission_grant_shizuku_adb">Via Shizuku</string>
+    <string name="permission_grant_shizuku_notfound">Shizuku is not installed</string>
+    <string name="permission_grant_shizuku_interrupted">Shizuku is not running</string>
+    <string name="permission_grant_shizuku_outdated">Shizuku is outdated</string>
+    <string name="permission_grant_shizuku_user_denied">Shizuku permission denied</string>
+    <string name="permission_grant_shizuku_failed">Failed to access Shizuku</string>
 
-    <string name="permission_grant_via_shizuku_not_installed">Shizuku is not installed</string>
-    <string name="permission_grant_via_shizuku_not_running">Shizuku is not running</string>
-    <string name="permission_grant_via_shizuku_outdated">Shizuku is outdated</string>
-    <string name="permission_grant_via_shizuku_denied">Shizuku permission denied</string>
+    <string name="permission_grant_adb">Grant Permission via ADB</string>
+    <string name="permission_grant_adb_button">Via ADB</string>
+    <string name="permission_grant_adb_content">Please run the following command in your computer terminal to grant the permission.</string>
+
+    <string name="permission_secure">Write Secure Settings</string>
+    <string name="permission_secure_granted">Write Secure Settings permission has been granted successfully on Just Grayscale.</string>
+    <string name="permission_secure_revoked">Write Secure Settings permission has been revoked in Just Grayscale. You can grant the permission directly using Shizuku or grant the permission directly using ADB command.</string>
+    <string name="permission_secure_grant_adb">adb shell pm grant kr.alpha93.justgrayscale android.permission.WRITE_SECURE_SETTINGS</string>
+
+    <string name="battery_optimization">Battery Optimization</string>
+    <string name="battery_optimization_included">Included in Optimization</string>
+    <string name="battery_optimization_included_content">Just Grayscale has been included in battery optimization. Press Exclude button and then press Allow to exclude it from battery optimization.</string>
+    <string name="battery_optimization_included_button">Exclude</string>
+    <string name="battery_optimization_excluded">Excluded from Optimization</string>
+    <string name="battery_optimization_excluded_content">Just Grayscale has been excluded from battery optimization.</string>
+
+    <string name="notification">Notification</string>
+    <string name="notification_allowed">Post Notification Allowed</string>
+    <string name="notification_allowed_content">Just Grayscale has been allowed to post notification.</string>
+    <string name="notification_denied">Post Notification Denied</string>
+    <string name="notification_denied_content">Just Grayscale has been denied to post notification. Press Setup button and then press Allow to allow it to post notification.</string>
+    <string name="notification_denied_button">Setup</string>
+    <string name="notification_denied_user">Post Notification Denied</string>
+    <string name="notification_denied_unknown">Post Notification Denied</string>
+
+    <string name="notification_group_misc">Miscellaneous</string>
+    <string name="notification_group_misc_content">Miscellaneous notification from Just Grayscale.</string>
+
+    <string name="notification_channel_content">Notification required for Just Grayscale to function normally in the background. You can hide it by disabling the category.</string>
 
     <string name="service">Background Service</string>
     <string name="service_started">Service Started</string>
@@ -31,8 +53,10 @@
     <string name="service_stopped_content">Background service has been stopped.</string>
     <string name="service_stopped_battery_optimization">Battery Optimization Enabled</string>
     <string name="service_stopped_notification_denied">Post Notification Permission Denied</string>
+    <string name="service_stopped_settings_denied">Write Secure Settings Permission Denied</string>
 
     <string name="service_start">Start</string>
+    <string name="service_restart">Restart</string>
     <string name="service_running">Just Grayscale is running in the background.\nTo Turn Off the notification, press long on the notification and select Turn off notifications.</string>
 
 </resources>

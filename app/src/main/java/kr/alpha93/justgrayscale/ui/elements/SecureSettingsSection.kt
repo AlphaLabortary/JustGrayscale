@@ -7,6 +7,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,30 +47,33 @@ import kr.alpha93.justgrayscale.ui.util.ResourcedText
 
 private val permissionStatus = mutableStateOf(false)
 
-fun checkPermission(context: Context): Boolean {
+fun checkSecurePermission(context: Context): Boolean {
     permissionStatus.value =
         context.checkSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED
     return permissionStatus.value
 }
 
 @Composable
-fun PermissionSection(
+fun SecureSettingsSection(
+    modifier: Modifier = Modifier,
     dialogState: MutableState<Boolean>
 ) {
-    checkPermission(LocalContext.current)
+    checkSecurePermission(LocalContext.current)
+
+    val innerModifier = modifier.animateContentSize()
 
     if (permissionStatus.value)
-        PermissionSectionGranted()
+        SecureSettingsGranted(innerModifier)
     else
-        PermissionSectionRevoked(dialogState)
+        SecureSettingsRevoked(innerModifier, dialogState)
 }
 
 @Composable
 @Preview(device = "id:pixel_8_pro")
-private fun PermissionSectionGranted() {
+private fun SecureSettingsGranted(modifier: Modifier = Modifier) {
     Theme {
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             shape = RoundedCornerShape(30.dp)
         ) {
             Row(
@@ -91,8 +95,8 @@ private fun PermissionSectionGranted() {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
-                    ResourcedText(R.string.permission, fontSize = 20.sp)
-                    ResourcedText(R.string.permission_granted_content)
+                    ResourcedText(R.string.permission_secure, fontSize = 20.sp)
+                    ResourcedText(R.string.permission_secure_granted)
                 }
             }
         }
@@ -101,14 +105,15 @@ private fun PermissionSectionGranted() {
 
 @Composable
 @Preview(device = "id:pixel_8_pro")
-private fun PermissionSectionRevoked(
+private fun SecureSettingsRevoked(
+    modifier: Modifier = Modifier,
     dialogState: MutableState<Boolean> = mutableStateOf(false)
 ) {
     val context = LocalContext.current
 
     Theme {
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             shape = RoundedCornerShape(30.dp)
         ) {
             Column(
@@ -130,13 +135,13 @@ private fun PermissionSectionRevoked(
                             .padding(10.dp)
                             .size(30.dp)
                     )
-                    ResourcedText(R.string.permission, fontSize = 20.sp)
+                    ResourcedText(R.string.permission_secure, fontSize = 20.sp)
                 }
                 Column(
                     verticalArrangement = Arrangement.spacedBy(15.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    ResourcedText(R.string.permission_revoked_content)
+                    ResourcedText(R.string.permission_secure_revoked)
                     Row(
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier.fillMaxWidth()
@@ -144,7 +149,7 @@ private fun PermissionSectionRevoked(
                         Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
                             Button(
                                 onClick = { dialogState.value = true },
-                                content = { ResourcedText(R.string.permission_revoked_adb) }
+                                content = { ResourcedText(R.string.permission_grant_adb_button) }
                             )
                             Button(
                                 onClick = {
@@ -155,7 +160,7 @@ private fun PermissionSectionRevoked(
                                         )
                                     )
                                 },
-                                content = { ResourcedText(R.string.permission_revoked_shizuku) }
+                                content = { ResourcedText(R.string.permission_grant_shizuku_adb) }
                             )
                         }
                     }
@@ -179,10 +184,10 @@ fun ADBGuideDialog(
 
     Theme {
         AlertDialog(
-            title = { ResourcedText(R.string.permission_grant_via_adb) },
+            title = { ResourcedText(R.string.permission_grant_adb) },
             text = {
                 Column {
-                    ResourcedText(R.string.permission_grant_via_adb_content)
+                    ResourcedText(R.string.permission_grant_adb_content)
                     ClickableText(
                         text = AnnotatedString("adb shell pm grant kr.alpha93.justgrayscale android.permission.WRITE_SECURE_SETTINGS"),
                         onClick = { manager.setPrimaryClip(clipdata) },
@@ -198,13 +203,13 @@ fun ADBGuideDialog(
             },
             confirmButton = {
                 Button(
-                    content = { ResourcedText(R.string.close) },
+                    content = { ResourcedText(R.string.button_close) },
                     onClick = { dialogState.value = false }
                 )
             },
             dismissButton = {
                 Button(
-                    content = { ResourcedText(R.string.copy) },
+                    content = { ResourcedText(R.string.button_copy) },
                     colors = ButtonDefaults.buttonColors(
                         MaterialTheme.colorScheme.secondaryContainer,
                         MaterialTheme.colorScheme.onSecondaryContainer
