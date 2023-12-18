@@ -13,6 +13,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,7 +24,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import kr.alpha93.justgrayscale.ui.elements.ADBGuideDialog
+import kr.alpha93.justgrayscale.ui.elements.AdMobBanner
 import kr.alpha93.justgrayscale.ui.elements.DozeSettingsSection
 import kr.alpha93.justgrayscale.ui.elements.NotificationSection
 import kr.alpha93.justgrayscale.ui.elements.SecureSettingsSection
@@ -36,6 +40,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupNotificationsChannel()
+        MobileAds.initialize(this)
+        MobileAds.setRequestConfiguration(
+            RequestConfiguration.Builder().setTestDeviceIds(listOf("bf6ac6241f7ab914")).build()
+        )
 
         val dialogState = mutableStateOf(false)
 
@@ -74,6 +82,7 @@ class MainActivity : ComponentActivity() {
                             item { ServiceSection(Modifier.animateItemPlacement()) }
                         }
                     }
+                    AdMobBanner(Modifier.offset())
                 }
             }
         }

@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId = "kr.alpha93.justgrayscale"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = properties["version"] as String
@@ -75,6 +75,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.shizuku.api)
     implementation(libs.shizuku.provider)
+    implementation(libs.gms.ad)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
