@@ -1,0 +1,221 @@
+#-------------------------------------------------------------------------------#
+#               Qodana analysis is configured by qodana.yaml file               #
+#             https://www.jetbrains.com/help/qodana/qodana-yaml.html            #
+#-------------------------------------------------------------------------------#
+profile:
+  name: qodana.starter
+projectJDK: 21 #(Applied in CI/CD pipeline)
+#Execute shell command before Qodana execution (Applied in CI/CD pipeline)
+#bootstrap: sh ./prepare-qodana.sh
+#Install IDE plugins before Qodana execution (Applied in CI/CD pipeline)
+#plugins:
+#  - id: <plugin.id> #(plugin id can be found at https://plugins.jetbrains.com)
+#Specify Qodana linter for analysis (Applied in CI/CD pipeline)
+linter: jetbrains/qodana-jvm-community:latest
+fixesStrategy: apply
+#Specify inspection profile for code analysis
+#Enable inspections
+include:
+  - name: VulnerableLibrariesGlobal
+  - name: DeconstructionCanBeUsed
+  - name: CastThatLosesPrecision
+  - name: UnnecessaryExplicitNumericCast
+  - name: IntLiteralMayBeLongLiteral
+  - name: DoubleLiteralMayBeFloatLiteral
+  - name: AlphaUnsortedPropertiesFile
+  - name: WrongPropertyKeyValueDelimiter
+  - name: TrailingSpacesInProperty
+  - name: DuplicatePropertyInspection
+  - name: SuspiciousLocalesLanguages
+  - name: UseEllipsisInPropertyInspection
+  - name: UnusedProperty
+  - name: UnusedMessageFormatParameter
+  - name: InconsistentResourceBundle
+  - name: PatternNotApplicable
+  - name: PatternOverriddenByNonAnnotatedMethod
+  - name: PatternValidation
+  - name: ClassUnconnectedToPackage
+  - name: PackageWithTooFewClasses
+  - name: PackageWithTooManyClasses
+  - name: ExceptionPackage
+  - name: PackageInMultipleModules
+  - name: DisjointPackage
+  - name: ClassOnlyUsedInOnePackage
+  - name: EditorConfigMissingRequiredDeclaration
+  - name: EditorConfigShadowingOption
+  - name: EditorConfigSpaceInHeader
+  - name: EditorConfigEncoding
+  - name: EditorConfigRootDeclarationUniqueness
+  - name: EditorConfigWildcardRedundancy
+  - name: EditorConfigPatternRedundancy
+  - name: EditorConfigShadowedOption
+  - name: EditorConfigValueCorrectness
+  - name: EditorConfigReferenceCorrectness
+  - name: EditorConfigNoMatchingFiles
+  - name: EditorConfigVerifyByCore
+  - name: EditorConfigNumerousWildcards
+  - name: EditorConfigPairAcceptability
+  - name: EditorConfigRootDeclarationCorrectness
+  - name: EditorConfigUnexpectedComma
+  - name: EditorConfigListAcceptability
+  - name: EditorConfigKeyCorrectness
+  - name: EditorConfigEmptyHeader
+  - name: EditorConfigUnusedDeclaration
+  - name: EditorConfigEmptySection
+  - name: EditorConfigOptionRedundancy
+  - name: EditorConfigPatternEnumerationRedundancy
+  - name: EditorConfigCharClassRedundancy
+  - name: EditorConfigCharClassLetterRedundancy
+  - name: EditorConfigDeprecatedDescriptor
+  - name: EditorConfigValueUniqueness
+  - name: EditorConfigHeaderUniqueness
+  - name: EditorConfigPartialOverride
+  - name: GradleKotlinxCoroutinesDeprecation
+  - name: IgnoreDuplicateEntry
+  - name: IgnoreCoverEntry
+  - name: IgnoreSyntaxEntry
+  - name: IgnoreRelativeEntry
+  - name: IgnoreIncorrectEntry
+  - name: VariableTypeCanBeExplicit
+  - name: MethodCanBeVariableArityMethod
+  - name: CollectionsFieldAccessReplaceableByMethodCall
+  - name: FoldExpressionIntoStream
+  - name: LambdaCanBeMethodCall
+  - name: SimplifyForEach
+  - name: Convert2streamapi
+  - name: EnumerationCanBeIteration
+  - name: AssertStatement
+  - name: ForeachStatement
+  - name: ThreadRun
+  - name: UrlHashCode
+  - name: UsagesOfObsoleteApi
+  - name: MustAlreadyBeRemovedApi
+  - name: SystemGetProperty
+  - name: Since15
+  - name: OverrideOnly
+  - name: UnstableApiUsage
+  - name: UnstableTypeUsedInSignature
+  - name: BlockingMethodInNonBlockingContext
+  - name: SourceToSinkFlow
+  - name: UastIncorrectHttpHeaderInspection
+  - name: UastIncorrectMimeTypeInspection
+  - name: Dependency
+  - name: MissingDeprecatedAnnotationOnScheduledForRemovalApi
+  - name: NonExtendableApiUsage
+  - name: ReturnNull
+  - name: QodanaSanity
+  - name: CheckTagEmptyBody
+  - name: YAMLIncompatibleTypes
+  - name: YAMLDuplicatedKeys
+  - name: JUnitMixedFramework
+  - name: TestOnlyProblems
+  - name: TestFailedLine
+  - name: TestCaseWithNoTestMethods
+  - name: TestInProductSource
+  - name: MisorderedAssertEqualsArguments
+  - name: TestMethodWithoutAssertion
+  - name: AssertWithoutMessage
+  - name: ConstantAssertArgument
+  - name: TestCaseWithConstructor
+  - name: AssertBetweenInconvertibleTypes
+  - name: AssertEqualsCalledOnArray
+  - name: IgnoredJUnitTest
+  - name: JUnitMalformedDeclaration
+  - name: MigrateAssertToMatcherAssert
+  - name: JUnit5AssertionsConverter
+  - name: JUnit5Converter
+  - name: Junit4Converter
+  - name: SuperTearDownInFinally
+  - name: AssertEqualsMayBeAssertSame
+  - name: FieldCount
+  - name: ClassComplexity
+  - name: AnonymousClassComplexity
+  - name: ClassCoupling
+  - name: ConstructorCount
+  - name: MethodCount
+  - name: AnonymousClassMethodCount
+  - name: ListenerMayUseAdapter
+  - name: ClassNameDiffersFromFileName
+  - name: NoopMethodInAbstractClass
+  - name: ClassMayBeInterface
+  - name: LimitedScopeInnerClass
+  - name: InnerClassOnInterface
+  - name: ConstantDeclaredInInterface
+  - name: InterfaceMayBeAnnotatedFunctional
+  - name: NonFinalUtilityClass
+  - name: UtilityClassCanBeEnum
+  - name: Singleton
+  - name: ConstantDeclaredInAbstractClass
+  - name: EmptyClass
+  - name: ClassInitializer
+  - name: MethodReturnAlwaysConstant
+  - name: MarkerInterface
+  - name: MultipleTopLevelClassesInFile
+  - name: StaticNonFinalField
+  - name: UtilityClassWithPublicConstructor
+  - name: ClassWithOnlyPrivateConstructors
+  - name: UtilityClassWithoutPrivateConstructor
+  - name: ClassNamePrefixedWithPackageName
+  - name: ClassNameSameAsAncestorName
+  - name: ExceptionNameDoesntEndWithException
+  - name: NonExceptionNameEndsWithException
+  - name: SimplifiableEqualsExpression
+  - name: SimplifiableIfStatement
+  - name: ArrayCreationWithoutNewKeyword
+  - name: ObjectsEqualsCanBeSimplified
+  - name: OptionalContainsCollection
+  - name: OptionalToIf
+  - name: CallToStringConcatCanBeReplacedByOperator
+  - name: UnnecessaryQualifierForThis
+  - name: ReturnSeparatedFromComputation
+  - name: JoinDeclarationAndAssignmentJava
+  - name: LambdaParameterTypeCanBeSpecified
+  - name: ArrayCanBeReplacedWithEnumValues
+  - name: FillPermitsList
+  - name: UnnecessarySuperQualifier
+  - name: UnnecessarySuperConstructor
+  - name: UnnecessarilyQualifiedInnerClassAccess
+  - name: UnnecessaryFullyQualifiedName
+  - name: UnnecessaryBlockStatement
+  - name: ConstantOnWrongSideOfComparison
+  - name: ConstantExpression
+  - name: UnclearBinaryExpression
+  - name: UnqualifiedFieldAccess
+  - name: MissortedModifiers
+  - name: ReassignedVariable
+  - name: UnnecessarilyQualifiedStaticUsage
+  - name: UnnecessarilyQualifiedStaticallyImportedElement
+  - name: ConditionalCanBeOptional
+  - name: UnnecessaryConstructor
+  - name: ChainedEquality
+  - name: SingleStatementInBlock
+  - name: MoveFieldAssignmentToInitializer
+  - name: SystemOutErr
+  - name: ThreadDumpStack
+  - name: Deprecation
+  - name: UseOfObsoleteDateTimeApi
+  - name: ObsoleteCollection
+  - name: UNCHECKED_WARNING
+  - name: PublicField
+  - name: PackageVisibleField
+  - name: ProtectedField
+  - name: UseOfAnotherObjectsPrivateField
+  - name: InstanceofThis
+  - name: StaticMethodOnlyUsedInOneClass
+  - name: DeclareCollectionAsInterface
+  - name: OverlyStrongTypeCast
+  - name: ClassReferencesSubclass
+  - name: UnresolvedClassReferenceRepair
+  - name: NonThreadSafeLazyInitialization
+  - name: StaticVariableInitialization
+  - name: ThisEscapedInConstructor
+  - name: StaticVariableUninitializedUse
+  - name: InstanceVariableUninitializedUse
+  - name: NonFinalStaticVariableUsedInClassInitialization
+#Disable inspections
+exclude:
+  - name: All
+    paths:
+      - .idea
+      - unknown
+version: "1.0"
