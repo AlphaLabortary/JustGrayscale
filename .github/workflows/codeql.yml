@@ -33,6 +33,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Setup JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '21'
+        distribution: 'zulu'
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
@@ -45,3 +51,16 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:java-kotlin"
+  
+    - name: Run PMD
+      id: pmd
+      uses: pmd/pmd-github-action@967a81f8b657c87f7c3e96b62301cb1a48efef29
+      with:
+        rulesets: 'rulesets/java/quickstart.xml'
+        sourcePath: 'app/src/main/java'
+        analyzeModifiedFilesOnly: false
+        
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: pmd-report.sarif
