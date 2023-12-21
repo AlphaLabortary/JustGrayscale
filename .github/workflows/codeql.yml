@@ -30,37 +30,131 @@ jobs:
         language: [ 'java-kotlin' ]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Setup JDK
-      uses: actions/setup-java@v3
-      with:
-        java-version: '21'
-        distribution: 'zulu'
-
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
-      with:
-        languages: java-kotlin
-
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v3
-
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
-      with:
-        category: "/language:java-kotlin"
+      - name: Checkout repository
+        uses: actions/checkout@v4
   
-    - name: Run PMD
-      id: pmd
-      uses: pmd/pmd-github-action@967a81f8b657c87f7c3e96b62301cb1a48efef29
-      with:
-        rulesets: 'rulesets/java/quickstart.xml'
-        sourcePath: 'app/src/main/java'
-        analyzeModifiedFilesOnly: false
-        
-    - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: pmd-report.sarif
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+
+      - name: Setup python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+  
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: java-kotlin
+  
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+        env:
+          KSF_NAME: ${{ secrets.F }}
+          KSF_PASS: ${{ secrets.P }}
+          KEY_NAME: ${{ secrets.A }}
+          KEY_PASS: ${{ secrets.K }}
+  
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:java-kotlin"
+
+      - name: Perform Qodana Scan
+        uses: JetBrains/qodana-action@v2023.3
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+
+      - name: Upload Qodana report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: qodana.sarif.json
+    
+      - name: Run PMD
+        id: pmd
+        uses: pmd/pmd-github-action@967a81f8b657c87f7c3e96b62301cb1a48efef29
+        with:
+          rulesets: 'rulesets/java/quickstart.xml'
+          sourcePath: 'app/src/main/java'
+          analyzeModifiedFilesOnly: false
+          
+      - name: Upload PMD report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: pmd-report.sarif
+
+      - name: Run mobsfscan
+        uses: MobSF/mobsfscan@a60d10a83af68e23e0b30611c6515da604f06f65
+        with:
+          args: . --sarif --output results.sarif || true
+
+      - name: Upload mobsfscan report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: results.sarif
+
+      - name: Initialize Detekt
+        id: detekt_info
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api graphql --field tagName=$DETEKT_RELEASE_TAG --raw-field query='
+            query getReleaseAssetDownloadUrl($tagName: String!) {
+              repository(name: "detekt", owner: "detekt") {
+                release(tagName: $tagName) {
+                  releaseAssets(name: "detekt", first: 1) {
+                    nodes {
+                      downloadUrl
+                    }
+                  }
+                  tagCommit {
+                    oid
+                  }
+                }
+              }
+            }
+          ' 1> gh_response.json
+  
+          DETEKT_RELEASE_SHA=$(jq --raw-output '.data.repository.release.releaseAssets.tagCommit.oid' gh_response.json)
+          if [ $DETEKT_RELEASE_SHA != "37f0a1d006977512f1f216506cd695039607c3e5" ]; then
+            echo "Release tag doesn't match expected commit SHA"
+            exit 1
+          fi
+  
+          DETEKT_DOWNLOAD_URL=$(jq --raw-output '.data.repository.release.releaseAssets.nodes[0].downloadUrl' gh_response.json)
+          echo "download_url=$DETEKT_DOWNLOAD_URL" >> $GITHUB_OUTPUT
+  
+      - name: Setup Detekt
+        run: |
+          dest=$( mktemp -d )
+          curl --request GET \
+            --url ${{ steps.detekt_info.outputs.download_url }} \
+            --silent \
+            --location \
+            --output $dest/detekt
+          chmod a+x $dest/detekt
+          echo $dest >> $GITHUB_PATH
+  
+      - name: Run Detekt
+        continue-on-error: true
+        run: |
+          detekt --input ${{ github.workspace }} --report sarif:${{ github.workspace }}/detekt.sarif.json
+  
+      - name: Make artifact location URIs relative
+        continue-on-error: true
+        run: |
+          echo "$(
+            jq \
+              --arg github_workspace ${{ github.workspace }} \
+              '. | ( .runs[].results[].locations[].physicalLocation.artifactLocation.uri |= if test($github_workspace) then .[($github_workspace | length | . + 1):] else . end )' \
+              ${{ github.workspace }}/detekt.sarif.json
+          )" > ${{ github.workspace }}/detekt.sarif.json
+  
+      - name: Upload Detekt report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          # Path to SARIF file relative to the root of the repository
+          sarif_file: ${{ github.workspace }}/detekt.sarif.json
+          checkout_path: ${{ github.workspace }}
