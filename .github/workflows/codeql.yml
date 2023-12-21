@@ -49,13 +49,13 @@ jobs:
         with:
           languages: java-kotlin
   
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
-        env:
-          KSF_NAME: ${{ secrets.F }}
-          KSF_PASS: ${{ secrets.P }}
-          KEY_NAME: ${{ secrets.A }}
-          KEY_PASS: ${{ secrets.K }}
+      # - name: Autobuild
+      #   uses: github/codeql-action/autobuild@v3
+      #   env:
+      #     KSF_NAME: ${{ secrets.F }}
+      #     KSF_PASS: ${{ secrets.P }}
+      #     KEY_NAME: ${{ secrets.A }}
+      #     KEY_PASS: ${{ secrets.K }}
   
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
